@@ -1,4 +1,5 @@
 import os.path
+import random
 
 from django.shortcuts import render
 from django import forms
@@ -118,3 +119,9 @@ def edit(request, title):
         "title": title,
         "form": form,
     })
+
+
+def randomEntry(request):
+    allEntries = util.list_entries()
+    randEntry = allEntries[random.randint(0, len(allEntries)-1)]
+    return HttpResponseRedirect(f'/wiki/{randEntry}')

@@ -8,7 +8,7 @@
 {#        fixme: fix the title showing up in the content#}
     	<p>{{ result }}</p>
         <form action="{% url 'edit' title=title %}">
-            <button class="btn btn-primary btn-lg" type="submit">Edit this entry</button>
+            <button class="btn btn-primary" type="submit">Edit this entry</button>
         </form>
     {% else %}
         <div class="alert alert-warning d-flex align-items-center" role="alert">
