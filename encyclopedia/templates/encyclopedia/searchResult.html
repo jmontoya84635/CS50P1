@@ -1,0 +1,27 @@
+{% extends "encyclopedia/layout.html" %}
+{% block title %}
+    {{ title }}
+{% endblock %}
+{% block body %}
+    {% if isFound %}
+    <h1>{{ title }}</h1>
+{#        fixme: fix the title showing up in the information#}
+    	<p>{{ result }}</p>
+    {% else %}
+        <div class="alert alert-warning d-flex align-items-center" role="alert">
+            <div>
+                <h1 class="alert-heading">No results found for {{ title }}</h1>
+            </div>
+        </div>
+        <ul>
+            {% if relatedEntries %}
+                <h2>Did you mean?</h2>
+                {% for entry in relatedEntries %}
+                    <li><a href="{% url 'searchResult' title=entry %}">{{ entry.title }}</a></li>
+                {% endfor %}
+            {% else %}
+                <p>No related entries found</p>
+            {% endif %}
+        </ul>
+    {% endif %}
+{% endblock %}
