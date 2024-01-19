@@ -5,6 +5,7 @@ from django.shortcuts import render
 from django import forms
 from . import util
 from django.http import HttpResponseRedirect
+import markdown2
 
 
 class WikiPage(forms.Form):
@@ -44,7 +45,7 @@ def searchResult(request, title):
         "title": title.capitalize(),
         "isFound": isFound,
         # fixme: fix the the title showing up in information about the topic
-        "result": result,
+        "result": markdown2.markdown(result),
     })
 
 
@@ -66,8 +67,7 @@ def searchBar(request):
     return render(request, "encyclopedia/searchResult.html", {
         "title": search.capitalize(),
         "isFound": isFound,
-        # fixme: fix the the title showing up in information about the topic
-        "result": result,
+        "result": markdown2.markdown(str(result)),
         "foundRelated": False if (len(subStringEntries) == 0) else True,
         "relatedEntries": subStringEntries,
 
