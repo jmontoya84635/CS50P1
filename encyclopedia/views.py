@@ -16,11 +16,17 @@ class WikiPage(forms.Form):
     }))
 
 
+class EditForm(forms.Form):
+    content = forms.CharField(label="Edit Content:", widget=forms.Textarea(attrs={
+        "class": "form-control",
+        "rows": 10,
+    }))
+
+
 # Home page
 def index(request):
     return render(request, "encyclopedia/index.html", {
         "entries": util.list_entries(),
-
     })
 
 
@@ -85,9 +91,30 @@ def addPage(request):
             filepath = os.path.join('entries', f'{title}.md')
             print(filepath)
             newFile = open(filepath, "x")
-            newFile.write("# "+title+"\n\n")
+            newFile.write("# " + title + "\n\n")
             newFile.write(content)
             return HttpResponseRedirect(f'/wiki/{title}')
+        else:
+            return
     return render(request, "encyclopedia/addPage.html", {
         "form": WikiPage(),
+    })
+
+
+def edit(request, title):
+    if request.method == "POST":
+        form = EditForm(request.POST)
+        if form.is_valid():
+            content = form.cleaned_data["content"]
+            filepath = os.path.join('entries', f'{title}.md')
+            with open(filepath, 'w') as file:
+                file.write(f'# {title}\n\n{content}')
+            return HttpResponseRedirect(f'/wiki/{title}')
+    form = EditForm()
+    content = util.get_entry(title).split('\n')[2:]
+    content = ''.join(content)
+    form.fields['content'].initial = content
+    return render(request, "encyclopedia/edit.html", {
+        "title": title,
+        "form": form,
     })
